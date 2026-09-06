@@ -34,9 +34,9 @@ class DidWebRtcService {
   int get videoViewGeneration => _attachGeneration;
 
   Map<String, String> get _headers => {
-        'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true',
-      };
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true',
+  };
 
   Uri _uri(String path) {
     final root = baseUrl.endsWith('/')
@@ -108,8 +108,7 @@ class DidWebRtcService {
       if (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected) {
         onConnectionState?.call('connected');
         _rebindRendererSoft();
-      } else if (state ==
-          RTCPeerConnectionState.RTCPeerConnectionStateFailed) {
+      } else if (state == RTCPeerConnectionState.RTCPeerConnectionStateFailed) {
         onConnectionState?.call('failed');
       }
     };
@@ -183,9 +182,7 @@ class DidWebRtcService {
     // profile-level-id=42e029, which Android's encoder factory does not
     // match (42e01f) → "No video codecs in common" → m=video 0.
     remoteSdp = _ensureH264BaselineProfile(remoteSdp);
-    _debug(
-      'Remote video m-line: ${_videoMLine(remoteSdp) ?? "(missing)"}',
-    );
+    _debug('Remote video m-line: ${_videoMLine(remoteSdp) ?? "(missing)"}');
     for (final line in remoteSdp.split('\n')) {
       if (line.contains('H264') ||
           line.contains('profile-level-id') ||
@@ -212,17 +209,12 @@ class DidWebRtcService {
     }
 
     answerSdp = answerSdp.replaceAll('\n', '\r\n');
-    await pc.setLocalDescription(
-      RTCSessionDescription(answerSdp, answer.type),
-    );
+    await pc.setLocalDescription(RTCSessionDescription(answerSdp, answer.type));
 
     await _postJson('/did/sdp', {
       'stream_id': streamId,
       'session_id': sessionId,
-      'answer': {
-        'type': answer.type,
-        'sdp': answerSdp,
-      },
+      'answer': {'type': answer.type, 'sdp': answerSdp},
     });
 
     onConnectionState?.call('ready');
@@ -264,7 +256,10 @@ class DidWebRtcService {
       final fmtp = RegExp(r'^a=fmtp:(\d+)\s+(.*)$').firstMatch(line);
       if (fmtp != null && h264Pts.contains(fmtp.group(1))) {
         var params = fmtp.group(2)!;
-        if (RegExp(r'profile-level-id=', caseSensitive: false).hasMatch(params)) {
+        if (RegExp(
+          r'profile-level-id=',
+          caseSensitive: false,
+        ).hasMatch(params)) {
           params = params.replaceAllMapped(
             RegExp(r'profile-level-id=[0-9a-fA-F]+', caseSensitive: false),
             (_) => 'profile-level-id=42e01f',
@@ -309,8 +304,8 @@ class DidWebRtcService {
   }
 
   void _attachRemoteStream(MediaStream stream) {
-    final sameStream = identical(_remoteStream, stream) &&
-        renderer.srcObject?.id == stream.id;
+    final sameStream =
+        identical(_remoteStream, stream) && renderer.srcObject?.id == stream.id;
     _remoteStream = stream;
 
     for (final track in [
@@ -390,9 +385,8 @@ class DidWebRtcService {
         final values = stat.values;
         final type = values['type']?.toString() ?? stat.type;
         if (type != 'inbound-rtp' && type != 'track') continue;
-        final kind = values['kind']?.toString() ??
-            values['mediaType']?.toString() ??
-            '';
+        final kind =
+            values['kind']?.toString() ?? values['mediaType']?.toString() ?? '';
         if (kind.isNotEmpty && kind != 'video') continue;
         final decoded = values['framesDecoded'];
         final received = values['bytesReceived'];
@@ -404,8 +398,7 @@ class DidWebRtcService {
           'framesDecoded=$decoded framesReceived=$frames '
           'packetsReceived=$packets bytesReceived=$received',
         );
-        if ((decoded is num && decoded > 0) ||
-            (frames is num && frames > 0)) {
+        if ((decoded is num && decoded > 0) || (frames is num && frames > 0)) {
           _attachGeneration++;
           onRemoteStream?.call();
         }

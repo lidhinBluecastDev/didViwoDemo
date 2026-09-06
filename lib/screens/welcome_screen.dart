@@ -67,10 +67,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
     try {
       await renderer.initialize();
-      final service = DidWebRtcService(
-        baseUrl: _baseUrl,
-        renderer: renderer,
-      );
+      final service = DidWebRtcService(baseUrl: _baseUrl, renderer: renderer);
 
       if (!mounted) {
         await service.dispose();
@@ -87,10 +84,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           pageBuilder: (context, animation, secondaryAnimation) {
             return FadeTransition(
               opacity: animation,
-              child: ClassroomScreen(
-                service: service,
-                connectOnStart: true,
-              ),
+              child: ClassroomScreen(service: service, connectOnStart: true),
             );
           },
         ),
@@ -138,6 +132,30 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
             ),
           ),
+          // Soft black veil at the top so the logo wordmark stays readable.
+          const Align(
+            alignment: Alignment.topCenter,
+            child: IgnorePointer(
+              child: SizedBox(
+                height: 160,
+                width: double.infinity,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xCC000000),
+                        Color(0x66000000),
+                        Color(0x00000000),
+                      ],
+                      stops: [0, 0.55, 1],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
           SafeArea(
             minimum: const EdgeInsets.only(bottom: 8),
             child: Padding(
@@ -153,14 +171,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   FadeSlideIn(
                     child: Row(
                       children: [
-                        BrandLogo(height: layout.isPhone ? 44 : 56),
-                        const Spacer(),
+                        Expanded(
+                          child: BrandLogo(
+                            height: layout.isPhone ? 52 : 64,
+                            width: double.infinity,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
                         IconButton(
                           tooltip: 'Server settings',
                           onPressed: _connecting ? null : _openSettings,
                           style: IconButton.styleFrom(
                             foregroundColor: Colors.white,
-                            backgroundColor: Colors.white.withValues(alpha: 0.14),
+                            backgroundColor: Colors.white.withValues(
+                              alpha: 0.14,
+                            ),
                             minimumSize: const Size(44, 44),
                           ),
                           icon: const Icon(Icons.settings_rounded),
@@ -177,7 +202,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Meet your\nscience teacher',
+                            'Meet your\nteacher',
                             style: GoogleFonts.fraunces(
                               fontSize: layout.headlineSize(
                                 compact ? 30 : 34,
@@ -226,18 +251,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             ),
                           ),
                         ],
-                        const SizedBox(height: 14),
-                        Text(
-                          'A classroom demo for schools',
-                          textAlign: layout.isPhone
-                              ? TextAlign.center
-                              : TextAlign.left,
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 13,
-                            color: Colors.white.withValues(alpha: 0.65),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -295,9 +308,7 @@ class _ColabUrlDialogState extends State<_ColabUrlDialog> {
       padding: EdgeInsets.only(bottom: viewInsets.bottom),
       child: AlertDialog(
         backgroundColor: const Color(0xFF12323A),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         title: Text(
           'Colab server URL',
           style: GoogleFonts.plusJakartaSans(

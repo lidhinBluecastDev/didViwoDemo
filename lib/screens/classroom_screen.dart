@@ -44,7 +44,7 @@ class _ClassroomScreenState extends State<ClassroomScreen> {
   String _connectionNote = 'Connecting…';
   bool _speechAvailable = false;
   bool _submitting = false;
-  bool _showSttLog = true;
+  final bool _showSttLog = false;
   _SessionPhase _phase = _SessionPhase.idle;
   String _heard = '';
   String? _hint;
@@ -507,12 +507,12 @@ class _ClassroomScreenState extends State<ClassroomScreen> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Color(0x990A2A30),
-                  Color(0x000A2A30),
-                  Color(0x000A2A30),
+                  Color(0xCC000000),
+                  Color(0x00000000),
+                  Color(0x00000000),
                   Color(0xE60A2A30),
                 ],
-                stops: [0, 0.22, 0.48, 1],
+                stops: [0, 0.2, 0.48, 1],
               ),
             ),
           ),
@@ -529,30 +529,10 @@ class _ClassroomScreenState extends State<ClassroomScreen> {
                 children: [
                   Row(
                     children: [
-                      BrandLogo(height: phone ? 34 : 40),
-                      const Spacer(),
-                      TextButton(
-                        onPressed: () {
-                          setState(() => _showSttLog = !_showSttLog);
-                        },
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.white.withValues(alpha: 0.95),
-                          backgroundColor: Colors.white.withValues(alpha: 0.14),
-                          minimumSize: const Size(44, 44),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: phone ? 10 : 12,
-                            vertical: 10,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: Text(
-                          _showSttLog ? 'Hide STT' : 'STT log',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                          ),
+                      Expanded(
+                        child: BrandLogo(
+                          height: phone ? 34 : 42,
+                          width: double.infinity,
                         ),
                       ),
                       const SizedBox(width: 8),
