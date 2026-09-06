@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "did_webrtc_test (Chrome)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "deviceId": "chrome",
+      "toolArgs": [
+        "--dart-define=WEBRTC_USE_HTML_ELEMENT_VIEW=true",
+        "--web-browser-flag",
+        "--autoplay-policy=no-user-gesture-required"
+      ]
+    },
+    {
+      "name": "did_webrtc_test (macOS)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "deviceId": "macos"
+    },
+    {
+      "name": "did_webrtc_test",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart"
+    }
+  ]
+}
